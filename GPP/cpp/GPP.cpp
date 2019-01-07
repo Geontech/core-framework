@@ -495,6 +495,10 @@ void GPP_i::_init() {
   // check  reservation allocations 
   setAllocationImpl(this->redhawk__reservation_request, this, &GPP_i::allocate_reservation_request, &GPP_i::deallocate_reservation_request);
 
+  // check for docker elements
+  setAllocationImpl("DCE:c38d28a6-351d-4aa4-a9ba-3cea51966838",  this, &GPP_i::allocate_docker_image,  &GPP_i::deallocate_docker_image);
+  setAllocationImpl("DCE:47a581c8-e31f-4284-a3ef-6d8b98385835",  this, &GPP_i::allocate_docker_volume, &GPP_i::deallocate_docker_volume);
+
 }
 
 void GPP_i::constructor()
@@ -2478,7 +2482,17 @@ bool GPP_i::check_docker_volume(const std::string &value) {
     return check_docker("volume ls -q | " + grep + " " + value);
 }
 
+bool GPP_i::allocate_docker_image(const std::string &value) {
+    return check_docker_image(value);
+}
 
+void GPP_i::deallocate_docker_image(const std::string &value) { }
+
+bool GPP_i::allocate_docker_volume(const std::string &value) {
+    return check_docker_volume(value);
+}
+
+void GPP_i::deallocate_docker_volume(const std::string &value) { }
 
 bool GPP_i::allocateCapacity_nic_allocation(const nic_allocation_struct &alloc)
 {

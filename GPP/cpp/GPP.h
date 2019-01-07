@@ -90,6 +90,12 @@ class GPP_i : public GPP_base
         bool check_docker_image(const std::string &value);
         bool check_docker_volume(const std::string &value);
 
+        bool allocate_docker_image(const std::string &value);
+        void deallocate_docker_image(const std::string &value);
+
+        bool allocate_docker_volume(const std::string &value);
+        void deallocate_docker_volume(const std::string &value);
+
         CF::ExecutableDevice::ProcessID_Type execute ( const char* name, 
                                                        const CF::Properties& options, 
                                                        const CF::Properties& parameters)
