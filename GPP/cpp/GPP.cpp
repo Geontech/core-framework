@@ -1481,7 +1481,7 @@ CF::ExecutableDevice::ProcessID_Type GPP_i::execute (const char* name, const CF:
 
     CF::ExecutableDevice::ProcessID_Type ret_pid;
     try {
-        ret_pid = do_execute(name, options, tmp_params, prepend_args);
+        ret_pid = do_execute(name, options, tmp_params, prepend_args, useDocker);
         addProcess(ret_pid, app_id, component_id, reservation_value);
     } catch ( ... ) {
         throw;
@@ -1495,7 +1495,7 @@ CF::ExecutableDevice::ProcessID_Type GPP_i::execute (const char* name, const CF:
 /* execute *****************************************************************
     - executes a process on the device
 ************************************************************************* */
-CF::ExecutableDevice::ProcessID_Type GPP_i::do_execute (const char* name, const CF::Properties& options, const CF::Properties& parameters, const std::vector<std::string> prepend_args) throw (CORBA::SystemException, CF::Device::InvalidState, CF::ExecutableDevice::InvalidFunction, CF::ExecutableDevice::InvalidParameters, CF::ExecutableDevice::InvalidOptions, CF::InvalidFileName, CF::ExecutableDevice::ExecuteFail)
+CF::ExecutableDevice::ProcessID_Type GPP_i::do_execute (const char* name, const CF::Properties& options, const CF::Properties& parameters, const std::vector<std::string> prepend_args, const bool use_docker) throw (CORBA::SystemException, CF::Device::InvalidState, CF::ExecutableDevice::InvalidFunction, CF::ExecutableDevice::InvalidParameters, CF::ExecutableDevice::InvalidOptions, CF::InvalidFileName, CF::ExecutableDevice::ExecuteFail)
 {
     CF::Properties invalidOptions;
     std::string path;
@@ -1588,7 +1588,15 @@ CF::ExecutableDevice::ProcessID_Type GPP_i::do_execute (const char* name, const 
         logFile += "/valgrind.%p.log";
         args.push_back(logFile);
     }
-    args.push_back(path);
+
+    if (use_docker) {
+        // docker container will come up at its own SDRROOT
+        // 'name' is prefixed by /, so we prefix it with '.', here
+        args.push_back("." + std::string(name));
+    }
+    else {
+        args.push_back(path);
+    }
 
     RH_DEBUG(this->_baseLog, "Building param list for process " << path);
     for (CORBA::ULong i = 0; i < parameters.length(); ++i) {
