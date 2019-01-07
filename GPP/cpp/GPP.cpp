@@ -2429,6 +2429,55 @@ std::string GPP_i::find_exec(const char* name) {
   return target;
 }
 
+// Generic docker caller
+bool GPP_i::check_docker(const std::string &params) {
+    bool retval = false;
+
+    std::string docker = GPP_i::find_exec("docker");
+
+    if (!docker.empty())
+    {
+        // Verify the image exists
+        char buffer[128];
+        std::string result = "";
+        std::string docker_query = docker + " " + params;
+        FILE *pipe = popen(docker_query.c_str(), "r");
+        if (!pipe)
+            throw CF::ExecutableDevice::ExecuteFail(CF::CF_EINVAL, "Could not run popen");
+        try
+        {
+            while (!feof(pipe))
+            {
+                if (fgets(buffer, 128, pipe) != NULL)
+                {
+                    result += buffer;
+                }
+            }
+        }
+        catch (...)
+        {
+            pclose(pipe);
+            throw;
+        }
+        pclose(pipe);
+
+        retval = !result.empty();
+    }
+    return retval;
+}
+
+// Check for a docker image tagged as value
+bool GPP_i::check_docker_image(const std::string &value) {
+    return check_docker("images -q " + value);
+}
+
+// Check for a docker volume named value
+// TODO: Be less hackey. :-|
+bool GPP_i::check_docker_volume(const std::string &value) {
+    std::string grep = GPP_i::find_exec("grep");
+    return check_docker("volume ls -q | " + grep + " " + value);
+}
+
 
 
 bool GPP_i::allocateCapacity_nic_allocation(const nic_allocation_struct &alloc)

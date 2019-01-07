@@ -86,6 +86,9 @@ class GPP_i : public GPP_base
         void deallocate_mcastingress_capacity(const CORBA::Long &value);
 
         static std::string find_exec(const char* name);
+        bool check_docker(const std::string &params);
+        bool check_docker_image(const std::string &value);
+        bool check_docker_volume(const std::string &value);
 
         CF::ExecutableDevice::ProcessID_Type execute ( const char* name, 
                                                        const CF::Properties& options, 
