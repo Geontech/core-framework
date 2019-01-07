@@ -85,6 +85,8 @@ class GPP_i : public GPP_base
         bool allocate_mcastingress_capacity(const CORBA::Long &value);
         void deallocate_mcastingress_capacity(const CORBA::Long &value);
 
+        static std::string find_exec(const char* name);
+
         CF::ExecutableDevice::ProcessID_Type execute ( const char* name, 
                                                        const CF::Properties& options, 
                                                        const CF::Properties& parameters)

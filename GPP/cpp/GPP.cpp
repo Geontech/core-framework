@@ -2396,6 +2396,39 @@ void GPP_i::deallocate_mcastingress_capacity(const CORBA::Long &value)
     mcastnicIngressFree = mcastnicIngressCapacity;
 }
 
+// Find the executable name in the path variable and returns the path (or empty string, if not found).
+std::string GPP_i::find_exec(const char* name) {
+    DIR *dir;
+    struct dirent *ent;
+    std::string search_bin(name);
+
+    std::string path(getenv( "PATH" ));
+    std::string target;
+    bool found = false;
+    while (not found) {
+        size_t sub = path.find(":");
+        if (path.size() == 0)
+            break;
+        std::string substr = path.substr(0, sub);
+        if ((dir = opendir (substr.c_str())) != NULL) {
+            while ((ent = readdir (dir)) != NULL) {
+                std::string filename(ent->d_name);
+                if (filename == search_bin) {
+                    target.append(substr+"/"+filename);
+                    found = true;
+                    break;
+                }
+            }
+            closedir (dir);
+        }
+        if (sub != std::string::npos)
+            path = path.substr(sub+1, std::string::npos);
+        else
+            path.clear();
+    }
+  return target;
+}
+
 
 
 bool GPP_i::allocateCapacity_nic_allocation(const nic_allocation_struct &alloc)
