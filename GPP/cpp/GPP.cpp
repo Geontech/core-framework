@@ -1608,12 +1608,16 @@ CF::ExecutableDevice::ProcessID_Type GPP_i::do_execute (const char* name, const 
 
     RH_DEBUG(this->_baseLog, "Forking process " << path);
 
+    std::string full_command;
     std::vector<char*> argv(args.size() + 1, NULL);
     for (std::size_t i = 0; i < args.size(); ++i) {
         // const_cast because execv does not modify values in argv[].
         // See:  http://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
         argv[i] = const_cast<char*> (args[i].c_str());
+        full_command.append(args[i] + " ");
     }
+
+    RH_DEBUG(this->_baseLog, __FUNCTION__ << "Full command executed: " << full_command);
 
     rh_logger::LevelPtr  lvl = GPP_i::__logger->getLevel();
 
