@@ -1432,6 +1432,53 @@ CF::ExecutableDevice::ProcessID_Type GPP_i::execute (const char* name, const CF:
             prepend_args.push_back(waveform_name+"."+name_binding);
         }
     }
+
+    bool useDocker = false;
+    if (tmp_params.find("__DOCKER_IMAGE__") != tmp_params.end()) {
+        std::string image_name = tmp_params["__DOCKER_IMAGE__"].toString();
+        RH_DEBUG(this->_baseLog, __FUNCTION__ << "Component specified a Docker image: " << image_name);
+
+        // Check for the docker image
+        if (!check_docker_image(image_name)) {
+            CF::Properties invalidParameters;
+            invalidParameters.length(invalidParameters.length() + 1);
+            invalidParameters[invalidParameters.length() - 1].id = "__DOCKER_IMAGE__";
+            invalidParameters[invalidParameters.length() - 1].value <<= image_name.c_str();
+            throw CF::ExecutableDevice::InvalidParameters(invalidParameters);
+        }
+
+        // Remove the ':' from the container name
+        std::string container_name(component_id);
+        std::replace(container_name.begin(), container_name.end(), ':', '-');
+
+        std::string docker = GPP_i::find_exec("docker");
+        prepend_args.push_back(docker);
+        prepend_args.push_back("run");
+        prepend_args.push_back("--sig-proxy=true");
+        prepend_args.push_back("--rm");
+        prepend_args.push_back("--name");
+        prepend_args.push_back(container_name);
+        prepend_args.push_back("--net=host");
+        prepend_args.push_back("-v");
+        prepend_args.push_back(docker_omniorb_cfg+":/etc/omniORB.cfg"); // Overload omniORB.cfg in the container
+
+        // Additional arguments
+        if (tmp_params.find("__DOCKER_ARGS__") != tmp_params.end()) {
+            std::string docker_args_raw = tmp_params["__DOCKER_ARGS__"].toString();
+            std::vector<std::string> docker_args;
+            boost::split(docker_args, docker_args_raw, boost::is_any_of(" ") );
+            BOOST_FOREACH( const std::string& arg, docker_args ) {
+                prepend_args.push_back(arg);
+            }
+        }
+
+        // Finally, the image name
+        prepend_args.push_back(image_name);
+        RH_DEBUG(this->_baseLog, __FUNCTION__ << "Component will launch within a Docker container using this image: " << image_name);
+
+        useDocker = true;
+    }
+
     CF::ExecutableDevice::ProcessID_Type ret_pid;
     try {
         ret_pid = do_execute(name, options, tmp_params, prepend_args);
