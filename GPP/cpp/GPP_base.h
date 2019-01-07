@@ -145,6 +145,12 @@ class GPP_base : public ExecutableDevice_impl, protected ThreadedComponent
         std::vector<utilization_entry_struct> utilization;
         /// Property: component_monitor
         std::vector<component_monitor_struct> component_monitor;
+        /// Property: docker_omniorb_cfg
+        std::string docker_omniorb_cfg;
+        /// Property: docker_image
+        std::string docker_image;
+        /// Property: docker_volume
+        std::string docker_volume;
 
         // Ports
         /// Port: propEvent
