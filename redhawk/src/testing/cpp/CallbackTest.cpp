@@ -281,12 +281,12 @@ void CallbackTest::testFunction()
 
     // One-argument function: complex conjugate
     typedef std::complex<float> complex_float;
-    redhawk::callback<complex_float (complex_float)> func1 = &std::conj<float>;
+    redhawk::callback<complex_float (complex_float)> func1 = static_cast<complex_float (*)(const complex_float&)>(&std::conj);
     complex_float conj_result = func1(complex_float(1.0, 1.0));
     CPPUNIT_ASSERT_EQUAL(complex_float(1.0, -1.0), conj_result);
 
     // Two-argument function: power (with integer exponent)
-    redhawk::callback<double (double, int)> func2 = &std::pow<double,int>;
+    redhawk::callback<double (double, int)> func2 = static_cast<double (*)(double,int)>(&std::pow);
     double pow_result = func2(7.0, 3);
     CPPUNIT_ASSERT_EQUAL(343.0, pow_result);
 }

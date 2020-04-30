@@ -564,14 +564,15 @@ void GPP_i::update_grp_child_pids() {
     boost::regex re_("-?\\d+|[[:alpha:]]+|\\(.*\\)");
     BOOST_FOREACH(const int &_pid, pids_now) {
         if (parsed_stat.find(_pid) == parsed_stat.end()) { // it is not on the map
-            std::stringstream stat_filename;
-            stat_filename << "/proc/"<<_pid<<"/stat";
+            std::stringstream iss;
+            iss << "/proc/"<<_pid<<"/stat";
+            std::string stat_filename = iss.str();
             std::string line;
             unsigned fcnt=0;
             proc_values tmp;
             int pid;
             try {
-                std::ifstream istr(stat_filename.str().c_str());
+                std::ifstream istr(stat_filename.c_str());
                 std::getline(istr, line);
                 boost::sregex_token_iterator j;
                 boost::sregex_token_iterator i(line.begin(), line.end(), re_);
@@ -610,7 +611,7 @@ void GPP_i::update_grp_child_pids() {
             }
             if ( fcnt < 37 ) {
                 std::stringstream errstr;
-                errstr << "Insufficient fields proc/<pid>/stat: "<<stat_filename.str()<<" file (expected>=37 received=" << fcnt << ")";
+                errstr << "Insufficient fields proc/<pid>/stat: "<<stat_filename<<" file (expected>=37 received=" << fcnt << ")";
                 LOG_DEBUG(GPP_i, __FUNCTION__ << ": " << errstr.str() );
                 continue;
             }

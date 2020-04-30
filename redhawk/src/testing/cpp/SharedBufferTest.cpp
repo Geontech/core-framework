@@ -272,7 +272,7 @@ void SharedBufferTest::testSharing()
     CPPUNIT_ASSERT(shared == buffer);
 
     // Conjugate values and ensure that the buffers are still equal
-    std::transform(buffer.begin(), buffer.end(), buffer.begin(), std::conj<double>);
+    std::transform(buffer.begin(), buffer.end(), buffer.begin(), static_cast<std::complex<double>(*)(const std::complex<double>&)>(&std::conj));
     CPPUNIT_ASSERT(shared == buffer);
 }
 
