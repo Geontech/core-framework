@@ -17,10 +17,13 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?_ossiehome:  %define _ossiehome  /usr/local/redhawk/core}
 %define _prefix %{_ossiehome}
 Prefix:         %{_prefix}
+
+# el6 compatibility
+%{!?__python2:  %define __python2  %{__python}}
+%{!?python2_version:  %define python2_version  %{python_version}}
 
 Name:           redhawk-codegen
 Version:        2.2.6
@@ -37,18 +40,17 @@ BuildArch:      noarch
 # BuildRoot required for el5
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
-Requires:       python
+Requires:       python2
 Requires:       redhawk = %{version}
 %if 0%{?rhel} >= 7
-Requires:       python-jinja2
-BuildRequires:  python-jinja2
+Requires:       python2-jinja2
+BuildRequires:  python2-jinja2
 %else
 Requires:       python-jinja2-26
 BuildRequires:  python-jinja2-26
 %endif
-
-BuildRequires:  python-setuptools
-BuildRequires:  python-devel >= 2.4
+BuildRequires:  python2-setuptools
+BuildRequires:  python2-devel >= 2.4
 
 # Turn off the brp-python-bytecompile script; our setup.py does byte compilation
 # (From https://fedoraproject.org/wiki/Packaging:Python#Bytecompiling_with_the_correct_python_version)
@@ -65,12 +67,12 @@ REDHAWK Code Generators
 
 
 %build
-%{__python} setup.py build
+%{__python2} setup.py build
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install --skip-build -O1 --home=%{_prefix} --root=%{buildroot}
+%{__python2} setup.py install --skip-build -O1 --home=%{_prefix} --root=%{buildroot}
 rm $RPM_BUILD_ROOT%{_prefix}/lib/python/redhawk/__init__.py*
 
 
@@ -89,7 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/lib/python/redhawk/codegen
 %{_prefix}/lib/python/redhawk/packagegen
 %if 0%{?rhel} >= 6
-%{_prefix}/lib/python/redhawk_codegen-%{version}-py%{python_version}.egg-info
+%{_prefix}/lib/python/redhawk_codegen-%{version}-py%{python2_version}.egg-info
 %endif
 
 %changelog

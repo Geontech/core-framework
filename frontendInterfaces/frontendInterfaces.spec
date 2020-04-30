@@ -47,6 +47,10 @@ BuildRequires:  redhawk-devel >= 2.2.6
 BuildRequires:  bulkioInterfaces >= 2.2.6
 BuildRequires:  cppunit-devel
 
+# el6 compatibility
+%{!?__python2:  %define __python2  %{__python}}
+%{!?python2_version:  %define python2_version  %{python_version}}
+
 %description
 Libraries and interface definitions for frontend.
  * Commit: __REVISION__
@@ -80,8 +84,8 @@ rm -rf --preserve-root $RPM_BUILD_ROOT
 %{_libdir}/libfrontend-*
 %{_libdir}/pkgconfig/frontend.pc
 %if 0%{?rhel} >= 6
-%{_prefix}/lib/python/frontendInterfaces-%{version}-py%{python_version}.egg-info
-%{_prefix}/lib/python/frontend-%{version}-py%{python_version}.egg-info
+%{_prefix}/lib/python/frontendInterfaces-%{version}-py%{python2_version}.egg-info
+%{_prefix}/lib/python/frontend-%{version}-py%{python2_version}.egg-info
 %endif
 %if %{with java}
 %{_prefix}/lib/frontend.jar

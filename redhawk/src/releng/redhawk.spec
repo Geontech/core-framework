@@ -43,28 +43,37 @@ Vendor:         REDHAWK
 Requires:       util-linux-ng
 Requires:       java >= 1:1.8.0
 
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
+Requires:       numactl-libs
+%endif
+# No gstreamer-python for EL8
+%if 0%{?rhel} < 8
 Requires:       gstreamer-python
 %if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
 Requires:       gstreamer1-plugins-base
 Requires:       python-matplotlib-qt4
-Requires:       numactl-libs
 %else
 Requires:       gstreamer-plugins-base
 Requires:       python-matplotlib
 %endif
+%endif
 
-Requires:       python
+Requires:       python2
 %if 0%{?fedora} == 16 || 0%{?rhel} == 6
 Requires:       python-lxml
 Requires:       python-omniORB >= 3.0
 Requires:       omniORB-devel >= 4.1.0
 Requires:       bash-completion
 %endif
-%if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
+%if 0%{?rhel} == 7 || 0%{?fedora} >= 17
 Requires:       python-omniORB > 4.2.2
 Requires:       omniORB-devel > 4.2.2
 %endif
-Requires:       numpy
+%if 0%{?rhel} >= 8
+Requires:       python2-omniORB
+Requires:       omniORB-devel
+%endif
+Requires:       python2-numpy
 Requires:       binutils
 Requires:       numactl
 Requires:       sqlite
@@ -74,8 +83,8 @@ BuildRequires:  boost-devel >= 1.41
 BuildRequires:  autoconf automake libtool
 BuildRequires:  expat-devel
 BuildRequires:  java-1.8.0-openjdk-devel
-BuildRequires:  python-setuptools
-BuildRequires:  python-devel >= 2.4
+BuildRequires:  python2-setuptools
+BuildRequires:  python2-devel >= 2.4
 BuildRequires:  log4cxx-devel >= 0.10
 %if 0%{?fedora} == 16 || 0%{?rhel} == 6
 BuildRequires:  omniORB-devel >= 4.1.0
@@ -83,6 +92,10 @@ BuildRequires:  omniORBpy-devel >= 3.0
 %endif
 %if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
 BuildRequires:  omniORB-devel > 4.2.2
+BuildRequires:  omniORBpy-devel > 4.2.2
+%endif
+%if 0%{?rhel} == 8
+BuildRequires:  python2-omniORB
 BuildRequires:  omniORBpy-devel > 4.2.2
 %endif
 BuildRequires:  libomniEvents2-devel
@@ -158,7 +171,7 @@ Requires:       omniORBpy-devel > 4.2.2
 Requires:       omniORB-doc
 # Languages
 Requires:       gcc-c++
-Requires:       python-devel >= 2.4
+Requires:       python2-devel >= 2.4
 Requires:       java-1.8.0-openjdk-devel
 
 %description devel

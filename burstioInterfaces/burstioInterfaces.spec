@@ -46,6 +46,10 @@ BuildRequires:  bulkioInterfaces = %{version}
 
 BuildRequires:  cppunit-devel
 
+# el6 compatibility
+%{!?__python2:  %define __python2  %{__python}}
+%{!?python2_version:  %define python2_version  %{python_version}}
+
 %description
 BURSTIO interfaces for REDHAWK
  * Commit: __REVISION__
@@ -78,8 +82,8 @@ rm -rf --preserve-root $RPM_BUILD_ROOT
 %{_prefix}/lib/python/redhawk/burstio
 %{_prefix}/lib/python/redhawk/burstioInterfaces
 %if 0%{?rhel} >= 6
-%{_prefix}/lib/python/burstio-%{version}-py%{python_version}.egg-info
-%{_prefix}/lib/python/burstioInterfaces-%{version}-py%{python_version}.egg-info
+%{_prefix}/lib/python/burstio-%{version}-py%{python2_version}.egg-info
+%{_prefix}/lib/python/burstioInterfaces-%{version}-py%{python2_version}.egg-info
 %endif
 %if %{with java}
 %{_prefix}/lib/BURSTIOInterfaces.jar
