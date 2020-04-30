@@ -135,7 +135,7 @@ AM_CONDITIONAL(HAVE_JAVASUPPORT, test $HAVE_JAVASUPPORT = yes)
 # Optionally disable unit tests
 AC_ARG_ENABLE([testing], AS_HELP_STRING([--disable-testing], [disable build of unit tests]))
 AS_IF([test "x$enable_testing" != "xno"], [
-  AM_PATH_CPPUNIT(1.12.1)
+  PKG_CHECK_MODULES([CPPUNIT], [cppunit >= 1.12])
   AS_IF([test "x$HAVE_JAVASUPPORT" == "xyes"], [
     dnl Use RPM location hard-coded for now
     AC_SUBST([JUNIT_CLASSPATH], "/usr/share/java/junit4.jar")

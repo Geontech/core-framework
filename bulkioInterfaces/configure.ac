@@ -130,7 +130,7 @@ AM_CONDITIONAL(HAVE_JAVASUPPORT, test $HAVE_JAVASUPPORT = yes)
 # End optional java support
 
 # C++ unit testing support. May want to conditionally enable/disable this.
-AM_PATH_CPPUNIT(1.12.1)
+PKG_CHECK_MODULES([CPPUNIT], [cppunit >= 1.12])
 AS_IF([test "x$HAVE_JAVASUPPORT" == "xyes"], [
   dnl Use RPM location hard-coded for now
   AC_SUBST([JUNIT_CLASSPATH], "/usr/share/java/junit4.jar")
