@@ -940,7 +940,7 @@ void DeviceManager_impl::do_load ( CF::FileSystem_ptr fs,
                         fileOrDirectoryName.erase(iext);
                     }
                 }
-                std::string command = "python -c \"import ";
+                std::string command = "python2 -c \"import ";
                 command += fileOrDirectoryName;
                 command += std::string("\" 2>&1"); // redirect stdout and stderr to /dev/null
                 RH_DEBUG(this->_baseLog, "do_load check python module (.py) cmd= " << command << 
@@ -970,7 +970,7 @@ void DeviceManager_impl::do_load ( CF::FileSystem_ptr fs,
                 if (chdir(relativePath.c_str())) {
                     // this is an invalid path
                 } else {
-                    std::string command = "python -c \"import ";
+                    std::string command = "python2 -c \"import ";
                     command += fileOrDirectoryName;
                     command += std::string("\" 2>&1"); // redirect stdout and stderr to /dev/null
                     RH_DEBUG(this->_baseLog, "cmd= " << command << 

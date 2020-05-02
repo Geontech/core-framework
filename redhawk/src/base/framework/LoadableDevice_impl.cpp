@@ -478,7 +478,7 @@ throw (CORBA::SystemException, CF::Device::InvalidState,
                         fileOrDirectoryName.erase(iext);
                     }
                 }
-                std::string command = "python -c \"import ";
+                std::string command = "python2 -c \"import ";
                 command += fileOrDirectoryName;
                 command += std::string("\" 2>&1"); // redirect stdout and stderr to /dev/null
                 FILE *fileCheck = popen(command.c_str(), "r");
@@ -527,7 +527,7 @@ throw (CORBA::SystemException, CF::Device::InvalidState,
                 if (chdir(relativePath.c_str())) {
                         // this is an invalid path
                 } else {
-                    std::string command = "python -c \"import ";
+                    std::string command = "python2 -c \"import ";
                     command += fileOrDirectoryName;
                     command += std::string("\" 2>&1"); // redirect stdout and stderr to /dev/null
                     FILE *fileCheck = popen(command.c_str(), "r");
