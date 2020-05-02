@@ -44,7 +44,7 @@ class CommandWrapperSubProcess_i(CF__POA.Resource, Resource):
         Resource.__init__(self, identifier, execparams, loggerName=loggerName)
         self._pid = None
         self.execparams = " ".join(["%s %s" % x for x in execparams.items()])
-        command = "python"
+        command = "python2"
         args = [command, "components/CommandWrapperSubProcess/executables/FirstChild.py"]
         sp = subprocess.Popen(args, executable=command, cwd=os.getcwd())
 
