@@ -69,12 +69,13 @@ class OrbShutdownTest(scatest.CorbaTestCase):
         except:
             self.assertTrue(True)
 
-        # Specify a different location with the same domain name, verify it's not the same as the first
-        dom3=redhawk.base.attach(dom_name, 'localhost:2809')
+        # Attach to the domain a second time, which will create a new Domain
+        # object sharing the same ORB (the feature where it would return an
+        # existing reference was dropped).
+        dom3=redhawk.base.attach(dom_name)
         self.assertNotEqual(dom3,None)
         self.assertNotEqual(dom, dom3)
         self.assertEqual(dom.name, dom3.name)
-        self.assertEqual(dom3.location, 'localhost:2809')
         self.assertEquals(orb1, dom3.orb)
 
         orb1.shutdown(True)
