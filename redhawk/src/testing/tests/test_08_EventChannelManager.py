@@ -479,13 +479,12 @@ class EventChannelManagerRedhawkUtils(scatest.CorbaTestCase):
         # test setup starts up domain and connects to event channel manager 
 
         # event channel context 
-        orb=CORBA.ORB_init()
         cname='testchannel'
-        curi="corbaname::#"+self._domMgr._get_name()+'/'+cname
-        
+        curi = URI.stringToName(self._domMgr._get_name()+'/'+cname)
+
         # check channel does not exist
         try:
-            c=orb.string_to_object(curi)
+            self._root.resolve(curi)
             self.ecm.forceRelease(cname)            
         except:
             pass
@@ -503,9 +502,9 @@ class EventChannelManagerRedhawkUtils(scatest.CorbaTestCase):
         tch = reg.channel._narrow(CosEventChannelAdmin.EventChannel)
         self.assertNotEqual(tch, None, "Event Channel was not created")
 
-        # verify channel is in event service
+        # verify channel is in name service
         try:
-            c=orb.string_to_object(curi)            
+            self._root.resolve(curi)
         except:
             self.fail("Event channel (testchannel) does not exist")
 
@@ -520,13 +519,12 @@ class EventChannelManagerRedhawkUtils(scatest.CorbaTestCase):
         # test setup starts up domain and connects to event channel manager
 
         # event channel context 
-        orb=CORBA.ORB_init()
         cname='testchannel'
-        curi="corbaname::#"+self._domMgr._get_name()+'/'+cname
+        curi = URI.stringToName(self._domMgr._get_name()+'/'+cname)
         
         # check channel does not exist
         try:
-            c=orb.string_to_object(curi)
+            self._root.resolve(curi)
             self.ecm.forceRelease(cname)                        
         except:
             pass
@@ -544,9 +542,9 @@ class EventChannelManagerRedhawkUtils(scatest.CorbaTestCase):
         tch = reg.channel._narrow(CosEventChannelAdmin.EventChannel)
         self.assertNotEqual(tch, None, "Event Channel was not created")
 
-        # verify channel is in event service
+        # verify channel is in name service
         try:
-            c=orb.string_to_object(curi)            
+            self._root.resolve(curi)
         except:
             self.fail("Event channel (testchannel) does not exist")
 
