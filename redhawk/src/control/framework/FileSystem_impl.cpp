@@ -177,7 +177,7 @@ void FileSystem_impl::remove (const char* fileName) throw (CF::FileException, CF
     
     const fs::directory_iterator end_itr; // an end iterator (by boost definition)
     for (fs::directory_iterator itr = fsops.begin(dirPath); itr != end_itr; fsops.increment(itr)) {
-        const std::string& filename = BOOST_PATH_STRING(itr->path().filename());
+        const std::string filename = BOOST_PATH_STRING(itr->path().filename());
         if (fnmatch(searchPattern.c_str(), filename.c_str(), 0) == 0) {
             RH_TRACE(_fileSysLog, "Removing file " << itr->path().string());  
             if (!fsops.remove(itr->path())) {
