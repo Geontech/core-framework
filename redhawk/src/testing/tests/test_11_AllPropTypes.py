@@ -427,7 +427,7 @@ class TestAllTypes(scatest.CorbaTestCase):
                 if type(r.value._v) == int or type(r.value._v) == long or type(r.value._v) == float:
                     r.value._v = r.value._v + 1
                 elif r.value._t == CORBA.TC_char:
-                    r.value._v = 'o'
+                    r.value._v = chr(ord(r.value._v) + 1)
                 elif type(r.value._v) == str:
                     r.value._v = 'foo'
                 elif type(r.value._v) == bool:
