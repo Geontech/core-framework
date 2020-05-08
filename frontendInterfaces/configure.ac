@@ -89,8 +89,16 @@ AM_CONDITIONAL(HAVE_JAVASUPPORT, test $HAVE_JAVASUPPORT = yes)
 
 PKG_CHECK_MODULES([CPPUNIT], [cppunit >= 1.12])
 AS_IF([test "x$HAVE_JAVASUPPORT" == "xyes"], [
-  dnl Use RPM location hard-coded for now
-  AC_SUBST([JUNIT_CLASSPATH], "/usr/share/java/junit4.jar")
+  AC_ARG_VAR([JUNIT_CLASSPATH], [Java classpath for JUnit 4])
+  AC_MSG_CHECKING([for JUnit 4])
+  AS_IF([test "x$JUNIT_CLASSPATH" == "x"], [
+    dnl Use RPM location hard-coded for now
+    AS_IF([test -f /usr/share/java/junit4.jar], [JUNIT_CLASSPATH="/usr/share/java/junit4.jar"],
+          [test -f /usr/share/java/junit.jar], [JUNIT_CLASSPATH="/usr/share/java/junit.jar"])
+    dnl The JUnit 4 version on el8 also requires Hamcrest core
+    JUNIT_CLASSPATH="$JUNIT_CLASSPATH:/usr/share/java/hamcrest/core.jar"
+  ])
+  AC_MSG_RESULT([$JUNIT_CLASSPATH])
 ])
 
 AC_CONFIG_FILES([Makefile \
