@@ -20,7 +20,7 @@
 #% set className = component.userclass.name
 #% set baseClass = component.personaclass.name
 #% set artifactType = component.artifacttype
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 #% block license
 #% endblock

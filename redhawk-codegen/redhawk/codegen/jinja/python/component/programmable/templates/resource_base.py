@@ -20,7 +20,7 @@
 #% set className = component.baseclass.name
 #% set superclass = component.superclasses[0].name
 #% set artifactType = component.artifacttype
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # AUTO-GENERATED CODE.  DO NOT MODIFY!
 #
