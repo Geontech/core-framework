@@ -47,7 +47,21 @@ class PullComponentMapper(BaseComponentMapper):
         javacomp['hasfrontendprovides'] = self.hasFrontendProvidesPorts(softpkg)
         javacomp['hastunerstatusstructure'] = self.hasTunerStatusStructure(softpkg)
         javacomp['implements'] = self.getImplementedInterfaces(softpkg)
+        javacomp['interfaces'] = self._getDelegateInterfaces(softpkg)
         return javacomp
+
+    @staticmethod
+    def _getDelegateInterfaces(softpkg):
+        interfaces = set()
+        for port in softpkg.providesPorts():
+            idl = IDLInterface(port.repid())
+            # Ignore non-FRONTEND intefaces
+            if idl.namespace() != 'FRONTEND':
+                continue
+            interface = idl.interface() + 'Delegate'
+            interfaces.add(interface)
+
+        return interfaces
 
     @staticmethod
     def getImplementedInterfaces(softpkg):
